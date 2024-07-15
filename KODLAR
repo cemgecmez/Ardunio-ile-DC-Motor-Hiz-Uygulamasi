@@ -1,0 +1,203 @@
+
+int anlikhiz = 3; //enable pini (motorun hız Ayar pini)
+int sol = 6; //giris2 pini (dönüş yönü ayar pini)
+int sag = 5; //giris1 pini (dönüş yönü ayar pini)
+int hizarttirmabutonu= A0;
+int hizazaltmabutonu = A1;
+int baslatmabutonu = A2;
+int baslatma=0; //başlatma butonu degeri
+int deger=0; //başlatma butonu degeri
+int yesil=8;
+int sari=9;
+int kirmizi=10;
+float hiz = 0; //hiz değeri
+int arttirma=0; 
+int azaltma=0; 
+void setup()
+{ 
+pinMode(sol, OUTPUT);
+pinMode(sag, OUTPUT);
+pinMode(anlikhiz, OUTPUT);
+pinMode(hizarttirmabutonu, INPUT);
+pinMode(hizazaltmabutonu, INPUT);
+pinMode(baslatmabutonu, INPUT);
+pinMode(yesil, OUTPUT);
+pinMode(sari, OUTPUT);
+pinMode(kirmizi, OUTPUT);
+}
+void loop() {
+ baslatma = digitalRead(baslatmabutonu); //başlatma değeri başlatma butonundan okunacak
+if((baslatma==1)&&(deger==0)){ //başlatmaya ilk basışta herşeyi kapat,hiz değerini 45 yap.
+hiz=45; 
+digitalWrite(kirmizi,LOW);
+digitalWrite(yesil,LOW);
+digitalWrite(sari,LOW);
+digitalWrite(sag,LOW);
+digitalWrite(sol,LOW);
+analogWrite(anlikhiz,hiz); //hiz degeri anlık hıza(enable pinine,motor hız ayar pini) aktarılır.
+delay(300);
+digitalWrite(sag,HIGH); //motoru sağa çalıştır.
+digitalWrite(sol,LOW);
+deger=1;
+}
+if((baslatma==0)&&(deger==1)){ //butona ilk basıştan sonra değer=2 yap
+deger=2;
+delay(200);
+}
+if((baslatma==1)&&(deger==2)){ //butona 2.kez basılıyorsa (motor terse çalıştırmak isteniyorsa)
+digitalWrite(kirmizi,LOW);
+digitalWrite(yesil,LOW);
+digitalWrite(sari,LOW);
+digitalWrite(sari,HIGH); //sari ledi yak.
+digitalWrite(sag,LOW);
+digitalWrite(sol,LOW);
+analogWrite(anlikhiz,hiz); //motora o anki hız değerini aktar ve motoru ters yönde calistır
+delay(500);
+digitalWrite(sol,HIGH);
+digitalWrite(sag,LOW);
+delay(200);
+deger=0;
+}
+arttirma=digitalRead(hizarttirmabutonu); //arttirma değerini arttirmabutonundan oku.
+if((digitalRead(hizarttirmabutonu)==1)){ //arttirmabutonuna basildiginda arttirma değerini arttir
+arttirma++;
+delay(200);
+}
+switch(arttirma){ //arttirma butonuna her basildiginda 
+case 1: 
+hiz=(hiz*0.1)+hiz; // o anki hizi yuzde10 arttır
+analogWrite(anlikhiz,hiz); //hiz değerini anlikhıza aktar
+break;
+case 2:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 3:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 4:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 5:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 6:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 7:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 8:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 9:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+case 10:
+hiz=(hiz*0.1)+hiz;
+analogWrite(anlikhiz,hiz);
+break;
+}
+azaltma=digitalRead(hizazaltmabutonu); //azaltma değerini azaltma butonundan oku
+if((digitalRead(hizazaltmabutonu)==1)){ //azaltma butonuna basıldığında azaltma değerini arttır
+azaltma++;
+delay(200);
+}
+switch(azaltma){ //azaltma değeri her arttığında hızı yüzde10 azalt ve anlikhiza aktar
+case 1:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 2:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 3:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 4:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 5:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 6:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 7:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 8:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 9:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+case 10:
+hiz=hiz-(hiz*0.1);
+analogWrite(anlikhiz,hiz);
+break;
+}
+if (hiz>25.5 && hiz<51) {
+ digitalWrite(sari,LOW); 
+ digitalWrite(yesil,LOW);
+ digitalWrite(kirmizi,HIGH);
+}
+ 
+if (hiz<245 && hiz>204) { //hiz yüzde80-maks arasında ise kırmızı ledi yak.
+ digitalWrite(sari,LOW);
+ digitalWrite(yesil,LOW);
+ digitalWrite(kirmizi,HIGH);
+}
+if ((hiz>204 && hiz<245) && (digitalRead(sol)==1)) { //hiz yüzde80-maks arasında 
+digitalWrite(sari,HIGH); // motor ters dönüyorsa sarı ledi yak
+} 
+if (hiz>51 && hiz<204) { //hiz yüzde20-80 arasında ise yeşil ledi yak
+ digitalWrite(kirmizi,LOW);
+ digitalWrite(yesil,HIGH);
+}
+if ((hiz>51 && hiz<204) && (digitalRead(sol)==1)) { //hız yüzde20-80 arasında motor ters dönüyorsa
+ digitalWrite(sari,HIGH); //sarı ledi yak
+} 
+ 
+if (hiz<25.5 && hiz>23) { //hız minimum değerde ise yeşil ve sari ledi yak.
+ digitalWrite(kirmizi,HIGH);
+ digitalWrite(sari,HIGH);
+ digitalWrite(yesil,HIGH);
+ delay(500);
+ digitalWrite(kirmizi,LOW); //kırmızı ledi yanıp yanıp söndür.
+ delay(500);
+}
+if(hiz<23){ //hız minimumun altına düşerse hızı sıfırla ve ledleri söndür.
+hiz=0; 
+analogWrite(anlikhiz,hiz);
+ digitalWrite(kirmizi,LOW);
+ digitalWrite(sari,LOW);
+ digitalWrite(yesil,LOW); 
+}
+if (hiz>245) { //hız maksimumda ise yeşil ve sari ledi yak kırmızı ledi yanıp söndür.
+digitalWrite(kirmizi,HIGH);
+ digitalWrite(sari,HIGH);
+ digitalWrite(yesil,HIGH);
+ delay(500);
+ digitalWrite(kirmizi,LOW);
+ delay(500);
+}
+if ((hiz>25.5 && hiz<51) && (digitalRead(sol)==1)) { //hız minimum-yüzde20 aralıgında 
+digitalWrite(sari,HIGH); // motor ters dönüyorsa sarı ledi yak.
+}
+}
